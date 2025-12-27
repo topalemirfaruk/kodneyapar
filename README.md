@@ -6,7 +6,7 @@
 
 ## 🚀 Özellikler
 
-KodNeYapar? üç temel modda çalışır:
+KodNeYapar? altı temel modda çalışır:
 
 1.  **🧐 Kod Açıklama (Code Explanation)**
     *   Karmaşık fonksiyonları ve algoritmaları satır satır analiz eder.
@@ -22,6 +22,18 @@ KodNeYapar? üç temel modda çalışır:
     *   Modern kodlama standartlarına (Clean Code) uygun yeniden yazım önerileri sunar.
     *   Zaman ve bellek karmaşıklığını optimize eder.
 
+4.  **🔄 Kod Dönüştürücü (Code Converter)**
+    *   Kodunuzu bir programlama dilinden diğerine (Örn: Python -> JavaScript) çevirir.
+    *   Mantığı ve işlevselliği koruyarak hedef dilin standartlarına uygun kod üretir.
+
+5.  **📊 Karmaşıklık Analizi (Complexity Analysis)**
+    *   Kodunuzun Zaman (Time) ve Alan (Space) karmaşıklığını (Big O) analiz eder.
+    *   Algoritmanızın performansını anlamanıza yardımcı olur.
+
+6.  **🧪 Test Oluşturucu (Test Generator)**
+    *   Kodunuz için otomatik olarak kapsamlı birim testleri (Unit Tests) oluşturur.
+    *   Popüler test framework'leri (Jest, PyTest, JUnit vb.) ile uyumlu kod üretir.
+
 ## 🛠️ Teknolojiler
 
 Bu proje, modern web teknolojileri kullanılarak geliştirilmiştir:
@@ -30,8 +42,7 @@ Bu proje, modern web teknolojileri kullanılarak geliştirilmiştir:
 *   **Styling**: [Tailwind CSS v4](https://tailwindcss.com/), [Framer Motion](https://www.framer.com/motion/) (Animasyonlar)
 *   **Authentication**: [Clerk](https://clerk.com/)
 *   **AI Model**: [Google Gemini API](https://ai.google.dev/) (@google/generative-ai)
-*   **Database**: [Prisma](https://www.prisma.io/) (SQLite/PostgreSQL)
-*   **Payments**: [Stripe](https://stripe.com/)
+*   **Database**: [Prisma](https://www.prisma.io/) (PostgreSQL)
 *   **Icons**: [Lucide React](https://lucide.dev/)
 
 ## 📦 Kurulum
@@ -60,10 +71,6 @@ Projeyi yerel ortamınızda çalıştırmak için aşağıdaki adımları izleyi
     GEMINI_API_KEY=AIzaSy...
     
     DATABASE_URL="postgresql://..." # Vercel Postgres veya başka bir Postgres URL'i
-
-    STRIPE_SECRET_KEY=sk_test_...
-    STRIPE_WEBHOOK_SECRET=whsec_...
-    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
     ```
 
 4.  **Veritabanını Hazırlayın**
