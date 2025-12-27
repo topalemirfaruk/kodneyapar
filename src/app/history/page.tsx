@@ -55,6 +55,26 @@ export default function HistoryPage() {
         });
     };
 
+    const handleDelete = async (e: React.MouseEvent, id: string) => {
+        e.preventDefault(); // Prevent navigation if the card is a link
+        if (!confirm("Bu analizi silmek istediğinize emin misiniz?")) return;
+
+        try {
+            const response = await fetch(`/api/history/${id}`, {
+                method: "DELETE",
+            });
+
+            if (response.ok) {
+                setHistory((prev) => prev.filter((item) => item.id !== id));
+            } else {
+                alert("Silme işlemi başarısız oldu.");
+            }
+        } catch (error) {
+            console.error("Silme hatası:", error);
+            alert("Bir hata oluştu.");
+        }
+    };
+
     return (
         <div className="min-h-screen text-gray-900 dark:text-white selection:bg-brand-500/30 overflow-x-hidden transition-colors duration-300">
             <Header />
@@ -113,8 +133,17 @@ export default function HistoryPage() {
                                     transition={{ delay: index * 0.05 }}
                                     className="group relative bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl p-6 hover:bg-gray-50 dark:hover:bg-white/[0.08] transition-all duration-300 hover:shadow-lg dark:hover:shadow-none overflow-hidden"
                                 >
-                                    <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <ChevronRight className="text-gray-400 dark:text-gray-500" />
+                                    <div className="absolute top-0 right-0 p-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button
+                                            onClick={(e) => handleDelete(e, item.id)}
+                                            className="p-2 rounded-lg bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20 transition-colors"
+                                            title="Sil"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                        <div className="p-2">
+                                            <ChevronRight className="text-gray-400 dark:text-gray-500" />
+                                        </div>
                                     </div>
 
                                     <div className="flex flex-col md:flex-row gap-6">

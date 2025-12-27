@@ -34,6 +34,10 @@ KodNeYapar? altı temel modda çalışır:
     *   Kodunuz için otomatik olarak kapsamlı birim testleri (Unit Tests) oluşturur.
     *   Popüler test framework'leri (Jest, PyTest, JUnit vb.) ile uyumlu kod üretir.
 
+7.  **📜 Geçmiş Yönetimi ve Dışa Aktarma**
+    *   Geçmiş analizlerinizi görüntüleyebilir ve silebilirsiniz.
+    *   Analiz sonuçlarını Markdown (.md) formatında indirebilirsiniz.
+
 ## 🛠️ Teknolojiler
 
 Bu proje, modern web teknolojileri kullanılarak geliştirilmiştir:

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { clsx } from "clsx";
-import { FileText, List, AlertTriangle, Lightbulb, ShieldAlert, Check, Copy, ArrowRightLeft, Activity, Beaker } from "lucide-react";
+import { FileText, List, AlertTriangle, Lightbulb, ShieldAlert, Check, Copy, ArrowRightLeft, Activity, Beaker, Download } from "lucide-react";
 import Editor from "@monaco-editor/react";
 import ReactMarkdown from "react-markdown";
 
@@ -50,6 +50,51 @@ export default function AnalysisResult({ result, mode }: AnalysisResultProps) {
         }
     };
 
+    const handleDownload = () => {
+        if (!result) return;
+
+        let content = `# Kod Analiz Raporu\n\n`;
+        content += `## Özet\n${result.summary}\n\n`;
+        content += `## Detaylar\n${result.details}\n\n`;
+
+        if (result.securityReport) {
+            content += `## Güvenlik Raporu (${result.securityReport.level})\n`;
+            result.securityReport.issues.forEach((issue, i) => {
+                content += `- ${issue}\n`;
+            });
+            content += `\n`;
+        }
+
+        if (result.refactoredCode) {
+            content += `## Refactored Kod\n\`\`\`\n${result.refactoredCode}\n\`\`\`\n\n`;
+        }
+
+        if (result.convertedCode) {
+            content += `## Dönüştürülmüş Kod\n\`\`\`\n${result.convertedCode}\n\`\`\`\n\n`;
+        }
+
+        if (result.timeComplexity) {
+            content += `## Karmaşıklık Analizi\n`;
+            content += `- Zaman: ${result.timeComplexity}\n`;
+            content += `- Alan: ${result.spaceComplexity}\n`;
+            content += `\n${result.explanation}\n\n`;
+        }
+
+        if (result.testCode) {
+            content += `## Test Kodu\n\`\`\`\n${result.testCode}\n\`\`\`\n\n`;
+        }
+
+        const blob = new Blob([content], { type: "text/markdown" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `kodneyapar-analiz-${new Date().getTime()}.md`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
     if (!result) return null;
 
     const tabs = [
@@ -70,7 +115,7 @@ export default function AnalysisResult({ result, mode }: AnalysisResultProps) {
             animate={{ opacity: 1, y: 0 }}
             className="glass-panel rounded-2xl overflow-hidden mt-6"
         >
-            <div className="border-b border-white/10 bg-white/5 px-2">
+            <div className="border-b border-white/10 bg-white/5 px-2 flex items-center justify-between">
                 <div className="flex gap-1 overflow-x-auto">
                     {tabs.filter(t => t.show).map((tab) => (
                         <button
@@ -88,6 +133,14 @@ export default function AnalysisResult({ result, mode }: AnalysisResultProps) {
                         </button>
                     ))}
                 </div>
+                <button
+                    onClick={handleDownload}
+                    className="ml-auto flex items-center gap-2 px-3 py-1.5 text-sm text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                    title="Sonucu İndir"
+                >
+                    <Download size={16} />
+                    <span className="hidden sm:inline">İndir</span>
+                </button>
             </div>
 
             <div className="p-6 min-h-[300px]">
