@@ -6,7 +6,6 @@ import CodeEditor from "@/components/CodeEditor";
 import ControlPanel, { AnalysisMode } from "@/components/ControlPanel";
 import AnalysisResult from "@/components/AnalysisResult";
 import { motion } from "framer-motion";
-import PremiumModal from "@/components/PremiumModal";
 
 export default function Dashboard() {
     const [code, setCode] = useState(`// Örnek Kod
@@ -24,22 +23,6 @@ function calculateTotal(items) {
     const [lineByLine, setLineByLine] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [result, setResult] = useState(null);
-    const [isPremium, setIsPremium] = useState(false);
-    const [showPremiumModal, setShowPremiumModal] = useState(false);
-
-    useEffect(() => {
-        const checkSubscription = async () => {
-            try {
-                const response = await fetch("/api/subscription");
-                const data = await response.json();
-                setIsPremium(data.isPremium);
-            } catch (error) {
-                console.error("Subscription check failed", error);
-            }
-        };
-
-        checkSubscription();
-    }, []);
 
     const handleExplain = async () => {
         if (!code.trim()) return;
@@ -60,16 +43,6 @@ function calculateTotal(items) {
                 throw new Error(data.error || "Analiz sırasında bir hata oluştu.");
             }
 
-            // The API returns the result object directly (e.g. { summary: ... } or { securityReport: ... })
-            // But the previous code expected data.result. 
-            // Let's check the API route again. 
-            // API returns: NextResponse.json(data) where data is the parsed JSON from AI.
-            // So data IS the result.
-            // Wait, previous code was: setResult(data.result);
-            // If API returns { summary: "..." }, then data.result is undefined!
-            // This is likely the bug!
-
-            // Let's fix this:
             setResult(data);
 
             // Save to history if user is logged in
@@ -148,13 +121,6 @@ function calculateTotal(items) {
                                 setTargetLanguage={setTargetLanguage}
                                 onExplain={handleExplain}
                                 isAnalyzing={isAnalyzing}
-                                isPremium={isPremium}
-                                onShowPremium={() => setShowPremiumModal(true)}
-                            />
-
-                            <PremiumModal
-                                isOpen={showPremiumModal}
-                                onClose={() => setShowPremiumModal(false)}
                             />
 
                             <div className="glass-panel p-6 rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 backdrop-blur-md shadow-sm dark:shadow-none">

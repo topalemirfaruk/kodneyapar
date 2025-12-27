@@ -15,8 +15,6 @@ interface ControlPanelProps {
     setTargetLanguage: (lang: string) => void;
     onExplain: () => void;
     isAnalyzing: boolean;
-    isPremium: boolean;
-    onShowPremium: () => void;
 }
 
 export default function ControlPanel({
@@ -30,18 +28,12 @@ export default function ControlPanel({
     setTargetLanguage,
     onExplain,
     isAnalyzing,
-    isPremium,
-    onShowPremium,
 }: ControlPanelProps) {
     const languages = [
         "Python", "TypeScript", "JavaScript", "Java", "Go", "Rust", "C++", "C#", "PHP", "Swift"
     ];
 
     const handleModeChange = (newMode: AnalysisMode) => {
-        if (newMode === "converter" && !isPremium) {
-            onShowPremium();
-            return;
-        }
         setMode(newMode);
     };
 
@@ -100,11 +92,6 @@ export default function ControlPanel({
                         >
                             <ArrowRightLeft size={18} />
                             Dönüştürücü
-                            {!isPremium && (
-                                <span className="absolute -top-1 -right-1 bg-yellow-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-sm">
-                                    PRO
-                                </span>
-                            )}
                         </button>
                     </div>
                 </div>
