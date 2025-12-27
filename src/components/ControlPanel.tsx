@@ -116,7 +116,9 @@ export default function ControlPanel({
 
                 {/* Level Selection (Only for Explain and Converter mode) */}
                 <div className={clsx("flex flex-col gap-2 transition-all duration-300", !["explain", "converter"].includes(mode) && "hidden")}>
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Anlatım Seviyesi</label>
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-400">
+                        {mode === "converter" ? "Kod Karmaşıklığı" : "Anlatım Seviyesi"}
+                    </label>
                     <div className="grid grid-cols-3 gap-2 bg-gray-50 dark:bg-dark-800/50 p-1 rounded-xl border border-gray-200 dark:border-white/5">
                         <button
                             onClick={() => setLevel("beginner")}
