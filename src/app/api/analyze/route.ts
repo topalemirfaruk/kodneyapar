@@ -102,6 +102,43 @@ export async function POST(request: Request) {
           "convertedCode": "Dönüştürülmüş kodun tamamı (string olarak)"
         }
       `;
+    } else if (mode === "complexity") {
+      prompt = `
+        Sen bir algoritma uzmanısın. Aşağıdaki kodun Zaman Karmaşıklığını (Time Complexity) ve Alan Karmaşıklığını (Space Complexity) analiz et.
+        Big O notasyonunu kullan.
+
+        Kod:
+        \`\`\`${language || ""}
+        ${code}
+        \`\`\`
+
+        Lütfen yanıtı SADECE geçerli bir JSON formatında ver. Başka hiçbir metin ekleme.
+        JSON formatı şöyle olmalı:
+        {
+          "timeComplexity": "Örn: O(n)",
+          "spaceComplexity": "Örn: O(1)",
+          "explanation": "Karmaşıklık analizinin detaylı açıklaması."
+        }
+      `;
+    } else if (mode === "test-gen") {
+      prompt = `
+        Sen bir test mühendisisin. Aşağıdaki kod için kapsamlı birim testleri (Unit Tests) oluştur.
+        Dil: ${language || "JavaScript"}
+        Framework: ${language === "python" ? "pytest" : language === "java" ? "JUnit" : "Jest/Vitest"} (veya dile uygun en popüler olanı)
+
+        Kod:
+        \`\`\`${language || ""}
+        ${code}
+        \`\`\`
+
+        Lütfen yanıtı SADECE geçerli bir JSON formatında ver. Başka hiçbir metin ekleme.
+        JSON formatı şöyle olmalı:
+        {
+          "testCode": "Oluşturulan test kodunun tamamı (string olarak)",
+          "framework": "Kullanılan test framework'ü",
+          "instructions": "Testlerin nasıl çalıştırılacağına dair kısa talimatlar."
+        }
+      `;
     }
 
     const result = await model.generateContent(prompt);

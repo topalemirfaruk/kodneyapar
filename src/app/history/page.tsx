@@ -130,9 +130,17 @@ export default function HistoryPage() {
                                                 <div className="flex items-center gap-3 mb-3">
                                                     <span className={`px-3 py-1 rounded-full text-xs font-medium border ${item.mode === 'explain' ? 'bg-brand-500/10 text-brand-600 dark:text-brand-400 border-brand-500/20' :
                                                         item.mode === 'security' ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20' :
-                                                            'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20'
+                                                            item.mode === 'refactor' ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20' :
+                                                                item.mode === 'converter' ? 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20' :
+                                                                    item.mode === 'complexity' ? 'bg-pink-500/10 text-pink-600 dark:text-pink-400 border-pink-500/20' :
+                                                                        'bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/20'
                                                         }`}>
-                                                        {item.mode === 'explain' ? 'Kod Açıklama' : item.mode === 'security' ? 'Güvenlik Analizi' : 'Refactoring'}
+                                                        {item.mode === 'explain' ? 'Kod Açıklama' :
+                                                            item.mode === 'security' ? 'Güvenlik Analizi' :
+                                                                item.mode === 'refactor' ? 'Refactoring' :
+                                                                    item.mode === 'converter' ? 'Dönüştürücü' :
+                                                                        item.mode === 'complexity' ? 'Karmaşıklık Analizi' :
+                                                                            'Test Oluşturma'}
                                                     </span>
                                                     <span className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
                                                         <Calendar size={12} />

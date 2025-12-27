@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { clsx } from "clsx";
-import { FileText, List, AlertTriangle, Lightbulb, ShieldAlert, Check, Copy, ArrowRightLeft } from "lucide-react";
+import { FileText, List, AlertTriangle, Lightbulb, ShieldAlert, Check, Copy, ArrowRightLeft, Activity, Beaker } from "lucide-react";
 import Editor from "@monaco-editor/react";
 import ReactMarkdown from "react-markdown";
 
@@ -19,8 +19,12 @@ interface AnalysisResultProps {
         };
         refactoredCode?: string;
         convertedCode?: string;
+        timeComplexity?: string;
+        spaceComplexity?: string;
+        explanation?: string;
+        testCode?: string;
     } | null;
-    mode: "explain" | "security" | "refactor" | "converter";
+    mode: "explain" | "security" | "refactor" | "converter" | "complexity" | "test-gen";
     loading?: boolean;
 }
 
@@ -32,11 +36,13 @@ export default function AnalysisResult({ result, mode }: AnalysisResultProps) {
         if (mode === "security") setActiveTab("security");
         else if (mode === "refactor") setActiveTab("refactor");
         else if (mode === "converter") setActiveTab("converter");
+        else if (mode === "complexity") setActiveTab("complexity");
+        else if (mode === "test-gen") setActiveTab("test-gen");
         else setActiveTab("general");
     }, [mode, result]);
 
     const handleCopy = () => {
-        const textToCopy = result?.refactoredCode || result?.convertedCode;
+        const textToCopy = result?.refactoredCode || result?.convertedCode || result?.testCode;
         if (textToCopy) {
             navigator.clipboard.writeText(textToCopy);
             setCopied(true);
@@ -54,6 +60,8 @@ export default function AnalysisResult({ result, mode }: AnalysisResultProps) {
         { id: "security", label: "Güvenlik Raporu", icon: ShieldAlert, show: mode === "security" },
         { id: "refactor", label: "Refactored Kod", icon: FileText, show: mode === "refactor" },
         { id: "converter", label: "Dönüştürülmüş Kod", icon: ArrowRightLeft, show: mode === "converter" },
+        { id: "complexity", label: "Karmaşıklık Analizi", icon: Activity, show: mode === "complexity" },
+        { id: "test-gen", label: "Test Kodları", icon: Beaker, show: mode === "test-gen" },
     ];
 
     return (
@@ -211,11 +219,11 @@ export default function AnalysisResult({ result, mode }: AnalysisResultProps) {
                             </div>
                         )}
 
-                        {(activeTab === "refactor" || activeTab === "converter") && (
+                        {(activeTab === "refactor" || activeTab === "converter" || activeTab === "test-gen") && (
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between">
                                     <h3 className="text-lg font-semibold text-white">
-                                        {activeTab === "converter" ? "Dönüştürülmüş Kod" : "Önerilen Kod"}
+                                        {activeTab === "converter" ? "Dönüştürülmüş Kod" : activeTab === "test-gen" ? "Test Kodu" : "Önerilen Kod"}
                                     </h3>
                                     <button
                                         onClick={handleCopy}
@@ -229,7 +237,11 @@ export default function AnalysisResult({ result, mode }: AnalysisResultProps) {
                                     <Editor
                                         height="100%"
                                         defaultLanguage="javascript"
-                                        value={activeTab === "converter" ? (result.convertedCode || "// Kod dönüştürülemedi.") : (result.refactoredCode || "// Refactor edilmiş kod buraya gelecek...")}
+                                        value={
+                                            activeTab === "converter" ? (result.convertedCode || "// Kod dönüştürülemedi.") :
+                                                activeTab === "test-gen" ? (result.testCode || "// Test kodu oluşturulamadı.") :
+                                                    (result.refactoredCode || "// Refactor edilmiş kod buraya gelecek...")
+                                        }
                                         theme="vs-dark"
                                         options={{
                                             readOnly: true,
@@ -239,6 +251,25 @@ export default function AnalysisResult({ result, mode }: AnalysisResultProps) {
                                             padding: { top: 20 },
                                         }}
                                     />
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === "complexity" && (
+                            <div className="space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="bg-pink-500/10 border border-pink-500/20 p-6 rounded-xl text-center">
+                                        <h4 className="text-pink-400 font-medium mb-2">Zaman Karmaşıklığı</h4>
+                                        <div className="text-3xl font-bold text-white">{result.timeComplexity || "N/A"}</div>
+                                    </div>
+                                    <div className="bg-purple-500/10 border border-purple-500/20 p-6 rounded-xl text-center">
+                                        <h4 className="text-purple-400 font-medium mb-2">Alan Karmaşıklığı</h4>
+                                        <div className="text-3xl font-bold text-white">{result.spaceComplexity || "N/A"}</div>
+                                    </div>
+                                </div>
+                                <div className="bg-white/5 border border-white/10 p-6 rounded-xl">
+                                    <h4 className="text-lg font-semibold text-white mb-3">Detaylı Analiz</h4>
+                                    <p className="text-gray-300 leading-relaxed">{result.explanation}</p>
                                 </div>
                             </div>
                         )}

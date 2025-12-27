@@ -1,8 +1,8 @@
 "use strict";
-import { Zap, CheckCircle2, AlertCircle, BookOpen, ShieldCheck, RefreshCw, ArrowRightLeft } from "lucide-react";
+import { Zap, CheckCircle2, AlertCircle, BookOpen, ShieldCheck, RefreshCw, ArrowRightLeft, Activity, Beaker } from "lucide-react";
 import { clsx } from "clsx";
 
-export type AnalysisMode = "explain" | "security" | "refactor" | "converter";
+export type AnalysisMode = "explain" | "security" | "refactor" | "converter" | "complexity" | "test-gen";
 
 interface ControlPanelProps {
     level: "beginner" | "intermediate" | "advanced";
@@ -92,6 +92,30 @@ export default function ControlPanel({
                         >
                             <ArrowRightLeft size={18} />
                             Dönüştürücü
+                        </button>
+                        <button
+                            onClick={() => handleModeChange("complexity")}
+                            className={clsx(
+                                "px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2",
+                                mode === "complexity"
+                                    ? "bg-pink-500/10 text-pink-600 dark:text-pink-400 shadow-sm ring-1 ring-pink-500/20"
+                                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-white dark:hover:bg-white/5"
+                            )}
+                        >
+                            <Activity size={18} />
+                            Karmaşıklık
+                        </button>
+                        <button
+                            onClick={() => handleModeChange("test-gen")}
+                            className={clsx(
+                                "px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2",
+                                mode === "test-gen"
+                                    ? "bg-teal-500/10 text-teal-600 dark:text-teal-400 shadow-sm ring-1 ring-teal-500/20"
+                                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-white dark:hover:bg-white/5"
+                            )}
+                        >
+                            <Beaker size={18} />
+                            Test Oluştur
                         </button>
                     </div>
                 </div>
@@ -194,7 +218,11 @@ export default function ControlPanel({
                                         ? "bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 hover:shadow-purple-500/25"
                                         : mode === "converter"
                                             ? "bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 hover:shadow-orange-500/25"
-                                            : "bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 hover:shadow-brand-500/25",
+                                            : mode === "complexity"
+                                                ? "bg-gradient-to-r from-pink-600 to-pink-500 hover:from-pink-500 hover:to-pink-400 hover:shadow-pink-500/25"
+                                                : mode === "test-gen"
+                                                    ? "bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 hover:shadow-teal-500/25"
+                                                    : "bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 hover:shadow-brand-500/25",
                             "hover:scale-[1.02] active:scale-[0.98]"
                         )}
                     >
@@ -205,8 +233,8 @@ export default function ControlPanel({
                             </>
                         ) : (
                             <>
-                                {mode === "converter" ? <ArrowRightLeft size={20} className="text-white" /> : <Zap size={20} className="fill-white" />}
-                                {mode === "explain" ? "Analiz Et" : mode === "security" ? "Güvenliği Tara" : mode === "refactor" ? "Refactor Et" : "Dönüştür"}
+                                {mode === "converter" ? <ArrowRightLeft size={20} className="text-white" /> : mode === "complexity" ? <Activity size={20} className="text-white" /> : mode === "test-gen" ? <Beaker size={20} className="text-white" /> : <Zap size={20} className="fill-white" />}
+                                {mode === "explain" ? "Analiz Et" : mode === "security" ? "Güvenliği Tara" : mode === "refactor" ? "Refactor Et" : mode === "converter" ? "Dönüştür" : mode === "complexity" ? "Hesapla" : "Test Oluştur"}
                             </>
                         )}
                     </button>
