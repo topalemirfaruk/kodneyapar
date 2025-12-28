@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
-
-const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
     try {
@@ -13,12 +11,21 @@ export async function POST(request: Request) {
 
         const { code, mode, result } = await request.json();
 
+        if (!code || code.length > 20000) {
+            return NextResponse.json({ error: "Code too long" }, { status: 400 });
+        }
+
+        const resultString = JSON.stringify(result);
+        if (resultString.length > 100000) { // ~100KB limit for result
+            return NextResponse.json({ error: "Result too large" }, { status: 400 });
+        }
+
         const analysis = await prisma.analysis.create({
             data: {
                 userId,
                 code,
                 mode,
-                result: JSON.stringify(result),
+                result: resultString,
             },
         });
 

@@ -1,9 +1,23 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+import { auth } from "@clerk/nextjs/server";
+
 export async function POST(request: Request) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { code, level, lineByLine, mode, language, targetLanguage } = await request.json();
+
+    if (!code || code.length > 20000) {
+      return NextResponse.json(
+        { error: "Kod çok uzun veya boş. Lütfen 20.000 karakterden kısa bir kod girin." },
+        { status: 400 }
+      );
+    }
 
     const apiKey = process.env.GEMINI_API_KEY;
 

@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
-import { trTR } from "@clerk/localizations";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import BackgroundEffects from "@/components/BackgroundEffects";
+import ClerkProviderWrapper from "@/components/ClerkProviderWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,24 +26,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider localization={trTR}>
-      <html lang="tr" suppressHydrationWarning>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+    <html lang="tr" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
+          <ClerkProviderWrapper>
             <BackgroundEffects />
             <div className="relative z-10">
               {children}
             </div>
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+          </ClerkProviderWrapper>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
